@@ -70,6 +70,11 @@ test_psgi app => $mw->to_app, client => sub {
 	$mw->hsts( 0 );
 	$res = $cb->( GET 'https://localhost/' );
 	is $res->header( 'Strict-Transport-Security' ), undef, '... or completely disabled';
+
+	$mw->hsts( $hsts_age = 60 * 60 );
+	$mw->hsts_include_subdomains( 1 );
+	$res = $cb->( GET 'https://localhost/' );
+	is $res->header( 'Strict-Transport-Security' ), 'max-age='.$hsts_age.'; includeSubDomains', 'also includeSubDomains directive can be added';
 };
 
 done_testing;

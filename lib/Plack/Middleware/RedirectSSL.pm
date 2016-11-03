@@ -9,7 +9,7 @@ package Plack::Middleware::RedirectSSL;
 use parent 'Plack::Middleware';
 
 use Plack::Util ();
-use Plack::Util::Accessor qw( ssl hsts );
+use Plack::Util::Accessor qw( ssl hsts hsts_include_subdomains );
 use Plack::Request ();
 
 #                           seconds minutes hours days weeks
@@ -35,9 +35,11 @@ sub call {
 
 	if ( $is_ssl and $self->hsts // 1 ) {
 		my $max_age = 0 + ( $self->hsts // DEFAULT_STS_MAXAGE );
+		my $hsts_val = "max-age=$max_age";
+		$hsts_val .= "; includeSubDomains" if $self->hsts_include_subdomains;
 		$res = Plack::Util::response_cb( $res, sub {
 			my $res = shift;
-			Plack::Util::header_set( $res->[1], 'Strict-Transport-Security', "max-age=$max_age" );
+			Plack::Util::header_set( $res->[1], 'Strict-Transport-Security', $hsts_val );
 		} );
 	}
 

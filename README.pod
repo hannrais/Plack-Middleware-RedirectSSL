@@ -42,6 +42,12 @@ Specifies the C<max-age> value for the C<Strict-Transport-Security> header.
 If not specified, it defaults to 26 weeks. If 0, no C<Strict-Transport-Security>
 header will be sent.
 
+=item C<hsts_include_subdomains>
+
+Specifies the presence of optional "includeSubDomains" valueless directive in the C<Strict-Transport-Security> header.
+(Cf. L<RFCE<nbsp>6797, I<HTTP Strict Transport Security, section 6.1.2>|https://tools.ietf.org/html/rfc6797#section-6.1.2>.)
+If not specified, the directive will be absent. Any truthy value indicates that directive will be sent.
+
 =back
 
 =head1 AUTHOR
